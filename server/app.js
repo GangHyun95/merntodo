@@ -3,11 +3,18 @@ import AuthRoute from './routes/auth.js';
 import TodoRoute from './routes/todo.js';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
 
 const app = express();
 dotenv.config();
 
+const corsOptions = {
+    origin: 'http://localhost:5173',
+    credentials: true,
+};
+
 app.set('port', process.env.PORT || 3000);
+app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json());
 app.use('/api/user', AuthRoute);
