@@ -2,11 +2,13 @@ import express from 'express';
 import AuthRoute from './routes/auth.js';
 import TodoRoute from './routes/todo.js';
 import dotenv from 'dotenv';
+import cookieParser from 'cookie-parser';
 
 const app = express();
 dotenv.config();
 
 app.set('port', process.env.PORT || 3000);
+app.use(cookieParser());
 app.use(express.json());
 app.use('/api/user', AuthRoute);
 app.use('/api/todos', TodoRoute);
