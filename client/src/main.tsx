@@ -1,11 +1,9 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
-import App from './App.tsx';
 import { createBrowserRouter, RouterProvider } from 'react-router';
 import Todos from './pages/Todos.tsx';
-import Register from './pages/Register.tsx';
-import Login from './pages/Login.tsx';
+import AuthPage from './pages/AuthPage.tsx';
 
 const router = createBrowserRouter([
     {
@@ -13,13 +11,9 @@ const router = createBrowserRouter([
         element: <Todos />,
     },
     {
-        path: '/register',
-        element: <Register />,
-    },
-    {
-        path: 'login',
-        element: <Login />,
-    },
+        path: '/auth',
+        element: <AuthPage />
+    }
 ]);
 createRoot(document.getElementById('root')!).render(
     <StrictMode>

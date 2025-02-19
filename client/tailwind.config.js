@@ -10,8 +10,8 @@ export default {
                 sm: 'calc(var(--radius) - 4px)',
             },
             fontFamily: {
-                normal: ['Regular'],
-                bold: ['Bold'],
+                normal: ['Poppins-1', 'Noto Sans KR', 'sans-serif'],
+                bold: ['Poppins', 'Noto Sans KR', 'sans-serif'],
             },
             colors: {
                 background: 'hsl(var(--background))',
