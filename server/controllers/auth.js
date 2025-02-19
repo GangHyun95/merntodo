@@ -14,6 +14,14 @@ export async function register(req, res, next) {
         return next(createError(400, '비밀번호를 입력해주세요.'));
     }
 
+    if (!data?.passwordCheck) {
+        return next(createError(400, '비밀번호 확인을 입력해주세요.'));
+    }
+
+    if (data?.password !== data?.passwordCheck) {
+        return next(createError(400, '비밀번호와 비밀번호 확인이 일치하지 않습니다.'))
+    }
+
     await connectToDB();
     const alreadyRegistered = await User.exists({ email: data.email });
     if (alreadyRegistered)
@@ -50,7 +58,7 @@ export async function login(req, res, next) {
         secure: process.env.NODE_ENV === 'production',
     })
         .status(200)
-        .json('로그인 완료');
+        .json('로그인 성공');
 }
 
 export async function logout(req, res, next) {
