@@ -3,11 +3,12 @@ import { Lock, UserRound } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
+import "../styles/auth.scss";
 
 export default function AuthForm() {
     const [isRegister, setIsRegister] = useState(false);
     return (
-        <div className={`auth-container ${isRegister ? 'active' : ''}`}>
+        <div className={`auth-container${isRegister ? ' active' : ''}`}>
             <div className='form-box login'>
                 <form action=''>
                     <h1>Login</h1>
