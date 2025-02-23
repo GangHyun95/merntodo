@@ -135,6 +135,7 @@ export default function Todos() {
     }
 
     async function handleUpdate(formData: FormData) {
+        toast.success('Todo Updated!');
         const title = formData.get('title') as string;
         const id = formData.get('id');
         console.log({ title, id });

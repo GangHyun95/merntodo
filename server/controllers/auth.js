@@ -51,7 +51,9 @@ export async function login(req, res, next) {
     );
     if (!isPasswordCorrect)
         return next(createError(400, '이메일 또는 비밀번호가 올바르지 않습니다.'));
-    const token = jwt.sign({ id: user._id }, process.env.JWT);
+    const token = jwt.sign({ id: user._id }, process.env.JWT, {
+        expiresIn: '1h',
+    });
     console.log(token);
     res.cookie('access_token', token, {
         httpOnly: true,
