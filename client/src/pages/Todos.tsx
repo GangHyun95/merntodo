@@ -1,12 +1,7 @@
+import EditTodo from '@/components/EditTodo';
 import { Input } from '@/components/ui/input';
 import { Todo } from '@/types/todo';
-import {
-    CheckCheck,
-    CircleUserRound,
-    EditIcon,
-    Plus,
-    Trash2,
-} from 'lucide-react';
+import { CheckCheck, CircleUserRound, Plus, Trash2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import useSWR from 'swr';
 
@@ -81,6 +76,99 @@ export default function Todos() {
         form.reset();
     };
 
+    async function deleteTodo(id: string) {
+        toast.success('Todo deleted!');
+        await mutate(
+            async () => {
+                const response = await fetcher(
+                    `http://localhost:3000/api/todos/${id}`,
+                    {
+                        method: 'DELETE',
+                    }
+                );
+                if (response.error) {
+                    handleError(response.error);
+                }
+
+                return data?.filter((todo) => todo._id !== id);
+            },
+            {
+                optimisticData: data?.filter((todo) => todo._id !== id),
+                rollbackOnError: true,
+                revalidate: false,
+            }
+        );
+    }
+
+    async function handleComplete(id: string, isCompleted: boolean) {
+        await mutate(
+            async () => {
+                const response = await fetcher(
+                    `http://localhost:3000/api/todos/${id}`,
+                    {
+                        method: 'PUT',
+                        body: JSON.stringify({ isCompleted: !isCompleted }),
+                    }
+                );
+                if (response.error) {
+                    handleError(response.error);
+                }
+
+                return data?.map((todo) => {
+                    if (todo._id === id) {
+                        return { ...todo, isCompleted: !isCompleted };
+                    }
+                    return todo;
+                });
+            },
+            {
+                optimisticData: data?.map((todo) => {
+                    if (todo._id === id) {
+                        return { ...todo, isCompleted: !isCompleted };
+                    }
+                    return todo;
+                }),
+                rollbackOnError: true,
+                revalidate: false,
+            }
+        );
+    }
+
+    async function handleUpdate(formData: FormData) {
+        const title = formData.get('title') as string;
+        const id = formData.get('id');
+        console.log({ title, id });
+        await mutate(
+            async () => {
+                const response = await fetcher(
+                    `http://localhost:3000/api/todos/${id}`,
+                    {
+                        method: 'PUT',
+                        body: JSON.stringify({ title }),
+                    }
+                );
+                if (response.error) {
+                    handleError(response.error);
+                }
+                return data?.map((todo) => {
+                    if (todo._id === id) {
+                        return { ...todo, title };
+                    }
+                    return todo;
+                });
+            },
+            {
+                optimisticData: data?.map((todo) => {
+                    if (todo._id === id) {
+                        return { ...todo, title };
+                    }
+                    return todo;
+                }),
+                rollbackOnError: true,
+                revalidate: false,
+            }
+        );
+    }
     return (
         <div className='mx-auto mt-20 max-w-lg px-4 w-full flex flex-col gap-6'>
             <div>
@@ -126,14 +214,27 @@ export default function Todos() {
                             </span>
                             <div className='px-3 flex gap-2'>
                                 <CheckCheck
+                                    onClick={() =>
+                                        handleComplete(
+                                            todo._id,
+                                            todo.isCompleted
+                                        )
+                                    }
                                     className={`transition ease-in-out hover:cursor-pointer ${
                                         todo.isCompleted
                                             ? 'text-primary'
                                             : 'text-slate-300'
                                     }`}
                                 />
-                                <Trash2 className='iconHover' />
-                                <EditIcon className='iconHover' />
+                                <Trash2
+                                    className='iconHover'
+                                    onClick={() => deleteTodo(todo._id)}
+                                />
+                                <EditTodo
+                                    handleUpdate={handleUpdate}
+                                    id={todo._id}
+                                    title={todo.title}
+                                />
                             </div>
                         </div>
                     ))}

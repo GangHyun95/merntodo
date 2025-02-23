@@ -1,0 +1,58 @@
+import { Button } from '@/components/ui/button';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { useState } from 'react';
+import { EditIcon } from 'lucide-react';
+
+export default function EditTodo({
+    title,
+    id,
+    handleUpdate,
+}: {
+    title: string;
+    id: string;
+    handleUpdate: (formData: FormData) => Promise<void>;
+}) {
+    const [updatedTitle, setUpdatedTitle] = useState(title);
+    return (
+        <Dialog>
+            <DialogTrigger asChild>
+                <EditIcon className='iconHover' />
+            </DialogTrigger>
+            <DialogContent className='sm:max-w-[425px]'>
+                <DialogHeader>
+                    <DialogTitle>Todo 수정</DialogTitle>
+                    <DialogDescription>
+                        todo를 수정하세요. 변경이 완료되면 저장 버튼을
+                        눌러주세요.
+                    </DialogDescription>
+                </DialogHeader>
+                <DialogTrigger asChild>
+                    <form className='flex flex-col gap-2' action={handleUpdate}>
+                        <input type='hidden' value={id} name='id' />
+                        <Label htmlFor='title'>기존 todo</Label>
+                        <Input
+                            id='title'
+                            name='title'
+                            value={updatedTitle}
+                            onChange={(e) => setUpdatedTitle(e.target.value)}
+                            className='col-span-3'
+                        />
+                        <DialogFooter>
+                            <Button>저장</Button>
+                        </DialogFooter>
+                    </form>
+                </DialogTrigger>
+            </DialogContent>
+        </Dialog>
+    );
+}
