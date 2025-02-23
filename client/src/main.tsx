@@ -1,9 +1,10 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
-import { createBrowserRouter, RouterProvider } from 'react-router';
 import Todos from './pages/Todos.tsx';
 import AuthPage from './pages/AuthPage.tsx';
+import { Toaster } from 'react-hot-toast';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 const router = createBrowserRouter([
     {
@@ -12,11 +13,12 @@ const router = createBrowserRouter([
     },
     {
         path: '/auth',
-        element: <AuthPage />
-    }
+        element: <AuthPage />,
+    },
 ]);
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
+        <Toaster position='top-center' />
         <RouterProvider router={router} />
     </StrictMode>
 );

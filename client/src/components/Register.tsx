@@ -23,6 +23,10 @@ export default function Register({ setIsRegister }: Props) {
         password: false,
         passwordCheck: false,
     });
+    
+    const toggleShowPassword = (field: 'password' | 'passwordCheck') => {
+        setShowPassword((prev) => ({ ...prev, [field]: !prev[field] }));
+    };
 
     const [message, setMessage] = useState<{
         text: string | null;
@@ -32,9 +36,6 @@ export default function Register({ setIsRegister }: Props) {
         type: null,
     });
 
-    const toggleShowPassword = (field: 'password' | 'passwordCheck') => {
-        setShowPassword((prev) => ({ ...prev, [field]: !prev[field] }));
-    };
     useEffect(() => {
         if (state.success) {
             const timer = setTimeout(() => {
@@ -117,7 +118,7 @@ export default function Register({ setIsRegister }: Props) {
                         {showPassword.passwordCheck ? <Eye /> : <EyeOff />}
                     </button>
                 </div>
-                
+
                 {message.text && (
                     <span
                         className={`message ${

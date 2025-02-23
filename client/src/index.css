@@ -91,14 +91,14 @@ body {
     font-family: 'Poppins', 'Noto Sans KR', sans-serif;
 }
 
-#root {
-    @apply w-full min-h-screen flex justify-center items-center;
-}
-
 .message {
     @apply text-left w-full p-4 text-sm text-white bg-[#f74850] absolute -top-16 rounded-xl;
 }
 
 .successMsg {
     @apply bg-[#5cb85c];
+}
+
+.iconHover {
+    @apply transition ease-in-out hover:cursor-pointer hover:fill-primary;
 }

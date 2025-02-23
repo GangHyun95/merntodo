@@ -2,11 +2,12 @@ import { useActionState, useEffect } from 'react';
 import { Eye, EyeOff, UserRound } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { login } from '@/actions/userActions';
 import { useState } from 'react';
 
 export default function Login() {
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({ email: '', password: '' });
     const [state, formAction, isPending] = useActionState(login, {
         success: null,
@@ -21,6 +22,15 @@ export default function Login() {
         text: null,
         type: null,
     });
+
+    useEffect(() => {
+        if (state.success) {
+            setTimeout(() => {
+                navigate('/');
+            }, 1000);
+        }
+    }, [state.success]);
+    
     useEffect(() => {
         if (state.success || state.error) {
             setMessage({
