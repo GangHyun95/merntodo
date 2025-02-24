@@ -5,15 +5,19 @@ import Todos from './pages/Todos.tsx';
 import AuthPage from './pages/AuthPage.tsx';
 import { Toaster } from 'react-hot-toast';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import ProtectedRoute from './components/routes/ProtectedRoute.tsx';
+import ProtectedAuthPage from './components/routes/ProtectedAuthPage.tsx';
 
 const router = createBrowserRouter([
     {
         path: '/',
-        element: <Todos />,
+        element: <ProtectedAuthPage />,
+        children: [{ path: '/', element: <AuthPage /> }],
     },
     {
-        path: '/auth',
-        element: <AuthPage />,
+        path: '/todo',
+        element: <ProtectedRoute />,
+        children: [{ path: '/todo', element: <Todos /> }],
     },
 ]);
 createRoot(document.getElementById('root')!).render(

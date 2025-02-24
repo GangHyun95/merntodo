@@ -17,15 +17,12 @@ export default function Login() {
 
     useEffect(() => {
         if (state.success) {
-            setTimeout(() => {
-                navigate('/');
-            }, 1000);
+            navigate('/todo', { replace: true });
         }
     }, [state.success]);
-    
+
     useEffect(() => {
         if (state.success || state.error) {
-
             const timer = setTimeout(() => {
                 state.success = null;
                 state.error = null;

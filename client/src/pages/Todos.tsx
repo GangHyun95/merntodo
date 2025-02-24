@@ -13,8 +13,6 @@ const fetcher = (url:string, options: RequestInit = {}) => {
     return fetchWithAuth(url, {
         method: options.method || 'GET',
         headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        mode: 'cors',
         body: options.body,
     });
 };
