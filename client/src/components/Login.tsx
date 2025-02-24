@@ -15,14 +15,6 @@ export default function Login() {
     });
     const [showPassword, setShowPassword] = useState(false);
 
-    const [message, setMessage] = useState<{
-        text: string | null;
-        type: 'success' | 'error' | null;
-    }>({
-        text: null,
-        type: null,
-    });
-
     useEffect(() => {
         if (state.success) {
             setTimeout(() => {
@@ -33,13 +25,8 @@ export default function Login() {
     
     useEffect(() => {
         if (state.success || state.error) {
-            setMessage({
-                text: state.success || state.error,
-                type: state.success ? 'success' : 'error',
-            });
 
             const timer = setTimeout(() => {
-                setMessage({ text: null, type: null });
                 state.success = null;
                 state.error = null;
             }, 1000);
@@ -90,15 +77,6 @@ export default function Login() {
                         Forgot password?
                     </Link>
                 </div>
-                {message.text && (
-                    <span
-                        className={`message ${
-                            message.type === 'success' ? 'successMsg' : ''
-                        }`}
-                    >
-                        {message.text}
-                    </span>
-                )}
                 <Button disabled={isPending} className='btn'>
                     {isPending ? 'Logging in' : 'Login'}
                 </Button>

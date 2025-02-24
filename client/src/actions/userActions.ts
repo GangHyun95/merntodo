@@ -1,3 +1,5 @@
+import useAuthStore from '@/store/authStore';
+
 type RegisterState = {
     success: string | null;
     error: string | null;
@@ -47,6 +49,10 @@ export async function login(
         const data = await res.json();
         if (data?.error) {
             return { ...previousState, error: data.error };
+        }
+
+        if (data.access_token) {
+            useAuthStore.getState().setAccessToken(data.access_token);
         }
         return { error: null, success: data };
     } catch (error) {

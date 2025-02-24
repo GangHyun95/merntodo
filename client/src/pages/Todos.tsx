@@ -1,26 +1,37 @@
+import AuthInitializer from '@/components/AuthInitalizer';
 import EditTodo from '@/components/EditTodo';
 import { Input } from '@/components/ui/input';
-import { Todo } from '@/types/todo';
+import useAuthStore from '@/store/authStore';
+import { fetchWithAuth } from '@/utils/fetchWithAuth';
+import { Todo } from '@/utils/types';
 import { CheckCheck, CircleUserRound, Plus, Trash2 } from 'lucide-react';
+import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 import useSWR from 'swr';
 
-const fetcher = (url: string, options: RequestInit = {}) => {
-    return fetch(url, {
+const fetcher = (url:string, options: RequestInit = {}) => {
+    return fetchWithAuth(url, {
         method: options.method || 'GET',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         mode: 'cors',
         body: options.body,
-    }).then((res) => res.json());
+    });
 };
 
 export default function Todos() {
+    const { accessToken } = useAuthStore();
+
     const { data, error, mutate, isLoading } = useSWR<Todo[]>(
-        'http://localhost:3000/api/todos',
+        accessToken ? 'http://localhost:3000/api/todos' : null,
         fetcher
     );
 
+    useEffect(() => {
+        if (accessToken && mutate) {
+            mutate(); 
+        }
+    }, [accessToken]);
     if (error) {
         return (
             <h1 className='text-2xl py-2 text-center'>Something is wrong</h1>
@@ -31,8 +42,7 @@ export default function Todos() {
         return <h1 className='text-2xl py-2 text-center'>Loading...</h1>;
     }
 
-    console.log(data);
-
+    
     function handleError(error: string | Error) {
         const errorMessage = error instanceof Error ? error.message : error;
         toast.error(errorMessage);
@@ -170,8 +180,10 @@ export default function Todos() {
             }
         );
     }
+
     return (
         <div className='mx-auto mt-20 max-w-lg px-4 w-full flex flex-col gap-6'>
+            <AuthInitializer />
             <div>
                 <CircleUserRound />
             </div>

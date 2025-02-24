@@ -28,14 +28,6 @@ export default function Register({ setIsRegister }: Props) {
         setShowPassword((prev) => ({ ...prev, [field]: !prev[field] }));
     };
 
-    const [message, setMessage] = useState<{
-        text: string | null;
-        type: 'success' | 'error' | null;
-    }>({
-        text: null,
-        type: null,
-    });
-
     useEffect(() => {
         if (state.success) {
             const timer = setTimeout(() => {
@@ -49,13 +41,7 @@ export default function Register({ setIsRegister }: Props) {
 
     useEffect(() => {
         if (state.success || state.error) {
-            setMessage({
-                text: state.success || state.error,
-                type: state.success ? 'success' : 'error',
-            });
-
             const timer = setTimeout(() => {
-                setMessage({ text: null, type: null });
                 state.success = null;
                 state.error = null;
             }, 1000);
@@ -119,15 +105,6 @@ export default function Register({ setIsRegister }: Props) {
                     </button>
                 </div>
 
-                {message.text && (
-                    <span
-                        className={`message ${
-                            message.type === 'success' ? 'successMsg' : ''
-                        }`}
-                    >
-                        {message.text}
-                    </span>
-                )}
                 <Button disabled={isPending} className='btn'>
                     {isPending ? 'Registering' : 'Register'}
                 </Button>
