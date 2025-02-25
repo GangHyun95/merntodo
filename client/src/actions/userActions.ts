@@ -20,7 +20,6 @@ export async function register(
             body: JSON.stringify({ email, password, passwordCheck }),
         });
         const data = await res.json();
-        console.log(data);
         if (data?.error) {
             return { ...previousState, error: data.error };
         }
@@ -37,7 +36,6 @@ export async function login(
     try {
         const email = formData.get('email');
         const password = formData.get('password');
-        console.log({ email, password });
         const res = await fetch('http://localhost:3000/api/user/login', {
             method: 'POST',
             headers: {

@@ -3,6 +3,7 @@ import { Eye, EyeOff, UserRound } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { register } from '@/actions/userActions';
+import toast from 'react-hot-toast';
 
 type Props = {
     setIsRegister: React.Dispatch<React.SetStateAction<boolean>>;
@@ -23,30 +24,28 @@ export default function Register({ setIsRegister }: Props) {
         password: false,
         passwordCheck: false,
     });
-    
+
     const toggleShowPassword = (field: 'password' | 'passwordCheck') => {
         setShowPassword((prev) => ({ ...prev, [field]: !prev[field] }));
     };
 
     useEffect(() => {
         if (state.success) {
-            const timer = setTimeout(() => {
-                setIsRegister(false);
-                setFormData({ email: '', password: '', passwordCheck: '' });
-            }, 1000);
-
-            return () => clearTimeout(timer);
+            setIsRegister(false);
+            setFormData({ email: '', password: '', passwordCheck: '' });
         }
     }, [state.success]);
 
     useEffect(() => {
+        if (state.success) {
+            toast.success(state.success);
+        }
+        if (state.error) {
+            toast.error(state.error);
+        }
         if (state.success || state.error) {
-            const timer = setTimeout(() => {
-                state.success = null;
-                state.error = null;
-            }, 1000);
-
-            return () => clearTimeout(timer);
+            state.success = null;
+            state.error = null;
         }
     }, [state.success, state.error]);
 

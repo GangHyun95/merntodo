@@ -32,12 +32,7 @@ export async function register(req, res, next) {
         const newUser = new User({ ...req.body, password: hash });
         await newUser.save();
 
-        const accessToken = generateAccessToken(newUser.id);
-        res.status(201).json({
-            _id: newUser.id,
-            email: newUser.email,
-            access_token: accessToken,
-        });
+        res.status(201).json('회원가입이 완료되었습니다.');
     } catch (error) {
         next(error);
     }
@@ -96,23 +91,19 @@ export async function refreshAccessToken(req, res, next) {
 
         jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, async (err, decoded) => {
             if (err) {
-                console.error("Refresh Token 검증 실패:", err.message);
                 return next(createError(403, '유효하지 않은 Refresh Token입니다. 다시 로그인해주세요.'));
             }
 
             const user = await User.findById(decoded.id);
             if (!user) {
-                console.error("사용자 찾기 실패");
                 return next(createError(404, '해당 사용자를 찾을 수 없습니다. 다시 로그인해주세요.'));
             }
 
             const newAccessToken = generateAccessToken(user.id);
-            console.log("새 Access Token 발급:", newAccessToken);
 
             res.json({ access_token: newAccessToken });
         });
     } catch (error) {
-        console.error("refreshAccessToken 처리 중 오류 발생:", error);
         next(error);
     }
 }

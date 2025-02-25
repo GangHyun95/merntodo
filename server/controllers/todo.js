@@ -9,7 +9,6 @@ export async function getAllTodos(req, res, next) {
 }
 
 export async function addTodo(req, res, next) {
-    console.log(req.body);
     if (!req.body || !req.body.title) {
         return next(createError(404, '내용을 입력해주세요.'));
     }

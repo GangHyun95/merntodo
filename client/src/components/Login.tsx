@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Link, useNavigate } from 'react-router-dom';
 import { login } from '@/actions/userActions';
 import { useState } from 'react';
+import toast from 'react-hot-toast';
 
 export default function Login() {
     const navigate = useNavigate();
@@ -20,6 +21,12 @@ export default function Login() {
             navigate('/todo', { replace: true });
         }
     }, [state.success]);
+
+    useEffect(() => {
+        if (state.error) {
+            toast.error(state.error);
+        }
+    }, [state.error]);
 
     useEffect(() => {
         if (state.success || state.error) {

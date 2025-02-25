@@ -5,7 +5,6 @@ export default function AuthInitializer() {
     const refreshToken = useAuthStore((state) => state.refreshToken);
 
     useEffect(() => {
-        console.log('Refresh Token 실행');
         refreshToken();
     }, []);
 

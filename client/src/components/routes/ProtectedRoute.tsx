@@ -8,9 +8,10 @@ export default function ProtectedRoute() {
     const accessToken = useAuthStore((state) => state.accessToken);
     const setAccessToken = useAuthStore((state) => state.setAccessToken);
     const [loading, setLoading] = useState(true);
-
+    const [firstRender, setFirstRender] = useState(true);
     useEffect(() => {
         const checkAuth = async () => {
+            if (!firstRender && accessToken === null) return;
             if (!accessToken) {
                 const newToken = await refreshAccessToken();
                 if (newToken) {
@@ -22,6 +23,7 @@ export default function ProtectedRoute() {
             setLoading(false);
         };
         checkAuth();
+        setFirstRender(false);
     }, [accessToken]);
 
     if (loading) return;

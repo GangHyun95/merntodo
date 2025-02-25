@@ -1,15 +1,16 @@
 import AuthInitializer from '@/components/AuthInitalizer';
 import EditTodo from '@/components/EditTodo';
+import Profile from '@/components/Profile';
 import { Input } from '@/components/ui/input';
 import useAuthStore from '@/store/authStore';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
 import { Todo } from '@/utils/types';
-import { CheckCheck, CircleUserRound, Plus, Trash2 } from 'lucide-react';
+import { CheckCheck, Plus, Trash2 } from 'lucide-react';
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 import useSWR from 'swr';
 
-const fetcher = (url:string, options: RequestInit = {}) => {
+const fetcher = (url: string, options: RequestInit = {}) => {
     return fetchWithAuth(url, {
         method: options.method || 'GET',
         headers: { 'Content-Type': 'application/json' },
@@ -27,7 +28,7 @@ export default function Todos() {
 
     useEffect(() => {
         if (accessToken && mutate) {
-            mutate(); 
+            mutate();
         }
     }, [accessToken]);
     if (error) {
@@ -40,7 +41,6 @@ export default function Todos() {
         return <h1 className='text-2xl py-2 text-center'>Loading...</h1>;
     }
 
-    
     function handleError(error: string | Error) {
         const errorMessage = error instanceof Error ? error.message : error;
         toast.error(errorMessage);
@@ -146,7 +146,6 @@ export default function Todos() {
         toast.success('Todo Updated!');
         const title = formData.get('title') as string;
         const id = formData.get('id');
-        console.log({ title, id });
         await mutate(
             async () => {
                 const response = await fetcher(
@@ -182,8 +181,8 @@ export default function Todos() {
     return (
         <div className='mx-auto mt-20 max-w-lg px-4 w-full flex flex-col gap-6'>
             <AuthInitializer />
-            <div>
-                <CircleUserRound />
+            <div className='flex justify-end'>
+                <Profile />
             </div>
             <h1 className='bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 font-bold text-4xl text-center mb-4 text-transparent bg-clip-text'>
                 Todo App
