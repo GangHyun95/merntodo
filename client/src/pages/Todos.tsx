@@ -1,14 +1,14 @@
 import AuthInitializer from '@/components/AuthInitalizer';
 import EditTodo from '@/components/EditTodo';
 import Profile from '@/components/Profile';
-import { Input } from '@/components/ui/input';
 import useAuthStore from '@/store/authStore';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
 import { Todo } from '@/utils/types';
-import { CheckCheck, Plus, Trash2 } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 import useSWR from 'swr';
+import '../styles/todo.scss';
 
 const fetcher = (url: string, options: RequestInit = {}) => {
     return fetchWithAuth(url, {
@@ -179,79 +179,83 @@ export default function Todos() {
     }
 
     return (
-        <div className='mx-auto mt-20 max-w-lg px-4 w-full flex flex-col gap-6'>
+        <section className='todo-container'>
             <AuthInitializer />
-            <div className='flex justify-end'>
+
+            <div className='header'>
+                <h1>Todo App</h1>
                 <Profile />
             </div>
-            <h1 className='bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 font-bold text-4xl text-center mb-4 text-transparent bg-clip-text'>
-                Todo App
-            </h1>
-            <form onSubmit={handleAddTodo} className='flex gap-4 items-center'>
-                <Input
-                    type='text'
-                    placeholder='Enter todo'
-                    name='title'
-                    id='title'
-                    required
-                    className='shadow-md'
-                />
-                <button className='h-9 rounded-md border border-input bg-transparent px-4 text-base shadow-md flex items-center hover:bg-primary transition ease-linear group'>
-                    <Plus
-                        size={20}
-                        className='transition ease-linear group-hover:stroke-white'
+            <div className='wrapper'>
+                <form onSubmit={handleAddTodo}>
+                    <input
+                        type='text'
+                        placeholder='Enter todo'
+                        name='title'
+                        id='title'
+                        required
+                        autoComplete='off'
+                        className='todo-input'
                     />
-                </button>
-            </form>
-            {data?.length ? (
-                <div className='shadow-md border-2 border-input bg-transparent flex flex-col rounded'>
-                    {data.map((todo, index: number) => (
-                        <div
-                            key={index}
-                            className={`flex h-10 items-center w-full ${
-                                index === data.length - 1
-                                    ? 'border-b-0'
-                                    : 'border-b-2'
-                            }`}
-                        >
-                            <span
-                                className={`flex-1 px-3 ${
-                                    todo.isCompleted &&
-                                    'line-through text-[#63657b]'
-                                }`}
-                            >
-                                {todo.title}
-                            </span>
-                            <div className='px-3 flex gap-2'>
-                                <CheckCheck
-                                    onClick={() =>
+                    <button className='add-button'>ADD</button>
+                </form>
+                {data?.length ? (
+                    <ul>
+                        {data.map((todo, index: number) => (
+                            <li key={index} className='todo'>
+                                <input
+                                    type='checkbox'
+                                    id={`todo-${todo._id}`}
+                                    checked={todo.isCompleted}
+                                    onChange={() =>
                                         handleComplete(
                                             todo._id,
                                             todo.isCompleted
                                         )
                                     }
-                                    className={`transition ease-in-out hover:cursor-pointer ${
-                                        todo.isCompleted
-                                            ? 'text-primary'
-                                            : 'text-slate-300'
-                                    }`}
                                 />
-                                <Trash2
-                                    className='iconHover'
-                                    onClick={() => deleteTodo(todo._id)}
-                                />
-                                <EditTodo
-                                    handleUpdate={handleUpdate}
-                                    id={todo._id}
-                                    title={todo.title}
-                                />
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            ) : (
-                <span>등록된 할 일이 없습니다</span>
-            )}
-        </div>
+                                <label
+                                    htmlFor={`todo-${todo._id}`}
+                                    className='custom-checkbox'
+                                >
+                                    <svg
+                                        xmlns='http://www.w3.org/2000/svg'
+                                        height='24px'
+                                        viewBox='0 -960 960 960'
+                                        width='24px'
+                                        fill='#5f6368'
+                                    >
+                                        <path d='M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z' />
+                                    </svg>
+                                </label>
+                                <label
+                                    htmlFor={`todo-${todo._id}`}
+                                    className='todo-text'
+                                >
+                                    {todo.title}
+                                </label>
+                                <div className='btn-wrap'>
+                                    <button className='edit-button'>
+                                        <EditTodo
+                                            handleUpdate={handleUpdate}
+                                            id={todo._id}
+                                            title={todo.title}
+                                        />
+                                    </button>
+                                    <button
+                                        className='delete-button'
+                                        onClick={() => deleteTodo(todo._id)}
+                                    >
+                                        <Trash2 />
+                                    </button>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
+                ) : (
+                    <div>새로운 할 일을 추가하세요!</div>
+                )}
+            </div>
+        </section>
     );
 }

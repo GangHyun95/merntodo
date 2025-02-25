@@ -46,6 +46,7 @@ export default function Login() {
 
     return (
         <div className='form-box login'>
+            <h1 className='title'>Todo APP</h1>
             <form action={formAction}>
                 <h1>Login</h1>
                 <div className='input-box'>
@@ -75,11 +76,6 @@ export default function Login() {
                     >
                         {showPassword ? <Eye /> : <EyeOff />}
                     </button>
-                </div>
-                <div className='my-4'>
-                    <Link to='#' className='text-sm text-[#333]'>
-                        Forgot password?
-                    </Link>
                 </div>
                 <Button disabled={isPending} className='btn'>
                     {isPending ? 'Logging in' : 'Login'}

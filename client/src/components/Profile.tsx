@@ -41,10 +41,9 @@ export default function Profile() {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger>
-                <CircleUserRound className='transition ease-in hover:cursor-pointer hover:stroke-primary' />
+                <CircleUserRound className='profile' />
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-                <DropdownMenuItem>Profile</DropdownMenuItem>
                 <DropdownMenuItem onClick={handleLogout}>
                     Logout
                 </DropdownMenuItem>

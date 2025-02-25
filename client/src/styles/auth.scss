@@ -16,17 +16,6 @@
     margin: 20px;
     overflow: hidden;
 
-    h1 {
-        font-weight: bold;
-        font-size: 36px;
-        margin: -10px 0;
-    }
-
-    p {
-        font-size: 14.5px;
-        margin: 15px 0;
-    }
-
     .btn {
         width: 100%;
         height: 48px;
@@ -45,12 +34,31 @@
         height: 100%;
         background: #fff;
         display: flex;
+        flex-direction: column;
         align-items: center;
+        justify-content: center;
         color: #333;
         text-align: center;
         padding: 40px;
         z-index: 1;
         transition: 0.6s ease-in-out 1.2s, visibility 0s 1s;
+
+        .title {
+            position: absolute;
+            top: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 40px;
+            font-weight: bold;
+            color: hsl(var(--primary));
+            text-transform: uppercase;
+            z-index: 2;
+        }
+        h1 {
+            font-weight: bold;
+            font-size: 36px;
+            margin: -10px 0;
+        }
 
         &.register {
             visibility: hidden;
@@ -196,7 +204,7 @@
                     bottom: -30%;
                 }
             }
-            
+
             &::before {
                 left: 0;
                 top: -270%;

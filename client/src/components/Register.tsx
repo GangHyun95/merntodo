@@ -56,6 +56,7 @@ export default function Register({ setIsRegister }: Props) {
 
     return (
         <div className='form-box register'>
+            <h1 className='title'>Todo APP</h1>
             <form action={formAction}>
                 <h1>Registration</h1>
                 <div className='input-box'>
