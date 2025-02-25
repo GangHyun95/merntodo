@@ -2,7 +2,7 @@ import { useActionState, useEffect } from 'react';
 import { Eye, EyeOff, UserRound } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { login } from '@/actions/userActions';
 import { useState } from 'react';
 import toast from 'react-hot-toast';

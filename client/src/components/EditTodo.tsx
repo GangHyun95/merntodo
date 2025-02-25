@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { EditIcon } from 'lucide-react';
 
 export default function EditTodo({
@@ -20,13 +20,22 @@ export default function EditTodo({
 }: {
     title: string;
     id: string;
-    handleUpdate: (formData: FormData) => Promise<void>;
+    handleUpdate: (id: string, title: string) => Promise<void>;
 }) {
     const [updatedTitle, setUpdatedTitle] = useState(title);
+    const [isOpen, setIsOpen] = useState(false);
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        await handleUpdate(id, updatedTitle);
+        setIsOpen(false);
+    };
     return (
-        <Dialog>
+        <Dialog open={isOpen}>
             <DialogTrigger asChild>
-                <EditIcon className='iconHover' />
+                <EditIcon
+                    className='iconHover'
+                    onClick={() => setIsOpen(true)}
+                />
             </DialogTrigger>
             <DialogContent className='sm:max-w-[425px]'>
                 <DialogHeader>
@@ -36,22 +45,19 @@ export default function EditTodo({
                         눌러주세요.
                     </DialogDescription>
                 </DialogHeader>
-                <DialogTrigger asChild>
-                    <form className='flex flex-col gap-2' action={handleUpdate}>
-                        <input type='hidden' value={id} name='id' />
-                        <Label htmlFor='title'>기존 todo</Label>
-                        <Input
-                            id='title'
-                            name='title'
-                            value={updatedTitle}
-                            onChange={(e) => setUpdatedTitle(e.target.value)}
-                            className='col-span-3'
-                        />
-                        <DialogFooter>
-                            <Button>저장</Button>
-                        </DialogFooter>
-                    </form>
-                </DialogTrigger>
+                <form className='flex flex-col gap-2' onSubmit={handleSubmit}>
+                    <Label htmlFor='title'>기존 todo</Label>
+                    <Input
+                        id='title'
+                        name='title'
+                        value={updatedTitle}
+                        onChange={(e) => setUpdatedTitle(e.target.value)}
+                        className='col-span-3'
+                    />
+                    <DialogFooter>
+                        <Button>저장</Button>
+                    </DialogFooter>
+                </form>
             </DialogContent>
         </Dialog>
     );
