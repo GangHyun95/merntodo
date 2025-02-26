@@ -20,7 +20,6 @@
         width: 100%;
         height: 48px;
         border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         border: none;
         font-size: 16px;
         color: #fff;
@@ -60,6 +59,11 @@
             margin: -10px 0;
         }
 
+        p {
+            font-size: 14.5px;
+            margin: 15px 0;
+        }
+
         &.register {
             visibility: hidden;
         }
@@ -96,6 +100,24 @@
                     color: #888;
                     font-weight: 400;
                 }
+            }
+        }
+
+        .social-icons {
+            .btn {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 10px;
+                background-color: #333;
+                transition: filter 200ms ease-in;
+                p {
+                    font-size: 16px;
+                }
+                &:hover {
+                    filter: brightness(1.4);
+                }
+                
             }
         }
     }

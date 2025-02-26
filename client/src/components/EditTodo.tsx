@@ -33,7 +33,6 @@ export default function EditTodo({
         <Dialog open={isOpen} onOpenChange={(open) => setIsOpen(open)}>
             <DialogTrigger asChild>
                 <EditIcon
-                    className='iconHover'
                     onClick={() => setIsOpen(true)}
                 />
             </DialogTrigger>

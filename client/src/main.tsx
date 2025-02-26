@@ -7,6 +7,7 @@ import { Toaster } from 'react-hot-toast';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import ProtectedRoute from './components/routes/ProtectedRoute.tsx';
 import ProtectedAuthPage from './components/routes/ProtectedAuthPage.tsx';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 const router = createBrowserRouter([
     {
@@ -22,7 +23,9 @@ const router = createBrowserRouter([
 ]);
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
-        <Toaster position='top-center' />
-        <RouterProvider router={router} />
+        <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+            <Toaster position='top-center' />
+            <RouterProvider router={router} />
+        </GoogleOAuthProvider>
     </StrictMode>
 );
