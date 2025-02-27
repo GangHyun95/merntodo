@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '@/config';
 import { fetchWithAuth } from '@/utils/fetchWithAuth';
 import { Todo } from '@/utils/types';
 import { useEffect } from 'react';
@@ -19,7 +20,7 @@ export default function useTodos(accessToken: string | null) {
         mutate,
         isLoading,
     } = useSWR<Todo[]>(
-        accessToken ? 'http://localhost:3000/api/todos' : null,
+        accessToken ? `${API_BASE_URL}/api/todos` : null,
         fetcher
     );
 
@@ -50,7 +51,7 @@ export default function useTodos(accessToken: string | null) {
         await mutate(
             async () => {
                 const response = await fetcher(
-                    'http://localhost:3000/api/todos',
+                    `${API_BASE_URL}/api/todos`,
                     {
                         method: 'POST',
                         body: JSON.stringify({ title }),
@@ -77,7 +78,7 @@ export default function useTodos(accessToken: string | null) {
         await mutate(
             async () => {
                 const response = await fetcher(
-                    `http://localhost:3000/api/todos/${id}`,
+                    `${API_BASE_URL}/api/todos/${id}`,
                     { method: 'DELETE' }
                 );
 
@@ -99,7 +100,7 @@ export default function useTodos(accessToken: string | null) {
         await mutate(
             async () => {
                 const response = await fetcher(
-                    `http://localhost:3000/api/todos/${id}`,
+                    `${API_BASE_URL}/api/todos/${id}`,
                     {
                         method: 'PUT',
                         body: JSON.stringify({ isCompleted: !isCompleted }),
@@ -134,7 +135,7 @@ export default function useTodos(accessToken: string | null) {
         await mutate(
             async () => {
                 const response = await fetcher(
-                    `http://localhost:3000/api/todos/${id}`,
+                    `${API_BASE_URL}/api/todos/${id}`,
                     {
                         method: 'PUT',
                         body: JSON.stringify({ title }),

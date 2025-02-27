@@ -1,9 +1,10 @@
+import { API_BASE_URL } from '@/config';
 import useAuthStore from '../store/authStore';
 
 export async function refreshAccessToken() {
     try {
         const res = await fetch(
-            'http://localhost:3000/api/user/refresh-token',
+            `${API_BASE_URL}/api/user/refresh-token`,
             {
                 method: 'GET',
                 credentials: 'include',

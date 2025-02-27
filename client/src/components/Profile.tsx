@@ -4,6 +4,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { API_BASE_URL } from '@/config';
 import useAuthStore from '@/store/authStore';
 import { CircleUserRound } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -15,7 +16,7 @@ export default function Profile() {
     const handleLogout = async () => {
         try {
             const response = await fetch(
-                'http://localhost:3000/api/user/logout',
+                `${API_BASE_URL}/api/user/logout`,
                 {
                     method: 'POST',
                     credentials: 'include',

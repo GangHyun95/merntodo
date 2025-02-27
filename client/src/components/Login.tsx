@@ -8,6 +8,7 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { useGoogleLogin } from '@react-oauth/google';
 import useAuthStore from '@/store/authStore';
+import { API_BASE_URL } from '@/config';
 
 export default function Login() {
     const navigate = useNavigate();
@@ -24,7 +25,7 @@ export default function Login() {
         onSuccess: async (response) => {
             try {
                 const res = await fetch(
-                    'http://localhost:3000/api/user/google',
+                    `${API_BASE_URL}/api/user/google`,
                     {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },

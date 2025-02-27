@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '@/config';
 import useAuthStore from '@/store/authStore';
 
 type RegisterState = {
@@ -12,7 +13,7 @@ export async function register(
         const email = formData.get('email');
         const password = formData.get('password');
         const passwordCheck = formData.get('passwordCheck');
-        const res = await fetch('http://localhost:3000/api/user/register', {
+        const res = await fetch(`${API_BASE_URL}/api/user/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -36,7 +37,7 @@ export async function login(
     try {
         const email = formData.get('email');
         const password = formData.get('password');
-        const res = await fetch('http://localhost:3000/api/user/login', {
+        const res = await fetch(`${API_BASE_URL}/api/user/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
