@@ -48,7 +48,7 @@ export async function login(req, res, next) {
             return next(createError(400, '비밀번호를 입력해주세요.'));
 
         await connectToDB();
-        const user = await User.findOne({ email });
+        const user = await User.findOne({ email }).select('+password');
         if (!user)
             return next(
                 createError(400, '이메일 또는 비밀번호가 올바르지 않습니다.')
@@ -139,7 +139,6 @@ export async function googleLogin(req, res, next) {
                 .json({ message: 'Google 인증 코드가 없습니다.' });
         }
 
-        console.log(process.env.GOOGLE_REDIRECT_URI);
         const tokenResponse = await fetch(
             'https://oauth2.googleapis.com/token',
             {
@@ -155,7 +154,7 @@ export async function googleLogin(req, res, next) {
                     redirect_uri: process.env.GOOGLE_REDIRECT_URI,
                 }).toString(),
             }
-        );  
+        );
 
         const tokenData = await tokenResponse.json();
 

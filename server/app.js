@@ -20,10 +20,6 @@ app.use(express.json());
 app.use('/api/user', AuthRoute);
 app.use('/api/todos', TodoRoute);
 
-app.get('/', (req, res, next) => {
-    res.send('hello world');
-});
-
 // 전역 에러 핸들러
 app.use((err, req, res, next) => {
     const statusCode = err.statusCode || 500;
