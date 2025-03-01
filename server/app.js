@@ -8,8 +8,15 @@ import cors from 'cors';
 const app = express();
 dotenv.config();
 
+const allowedOrigins = ['http://localhost:5173', 'https://merntodo-client.onrender.com'];
 const corsOptions = {
-    origin: 'http://localhost:5173',
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     credentials: true,
 };
 
