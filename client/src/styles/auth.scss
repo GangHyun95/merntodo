@@ -43,10 +43,6 @@
         transition: 0.6s ease-in-out 1.2s, visibility 0s 1s;
 
         .title {
-            position: absolute;
-            top: 60px;
-            left: 50%;
-            transform: translateX(-50%);
             font-size: 40px;
             font-weight: bold;
             color: hsl(var(--primary));

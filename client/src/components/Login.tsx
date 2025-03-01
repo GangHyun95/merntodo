@@ -84,8 +84,8 @@ export default function Login() {
 
     return (
         <div className='form-box login'>
-            <h1 className='title'>Todo APP</h1>
             <form action={formAction}>
+                <h1 className='title'>Todo APP</h1>
                 <h1>Login</h1>
                 <div className='input-box'>
                     <Input
