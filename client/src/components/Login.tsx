@@ -9,6 +9,7 @@ import toast from 'react-hot-toast';
 import { useGoogleLogin } from '@react-oauth/google';
 import useAuthStore from '@/store/authStore';
 import { API_BASE_URL } from '@/config';
+import { isMobileDevice } from '@/utils/isMobileDevice';
 
 export default function Login() {
     const navigate = useNavigate();
@@ -36,11 +37,12 @@ export default function Login() {
 
                 const data: { access_token?: string, refresh_token?: string } = await res.json();
                 console.log(data);
-
-                if (data.access_token && data.refresh_token) {
+                if (data.access_token) {
                     toast.success('Google 로그인 성공!');
                     setAccessToken(data.access_token);
-                    sessionStorage.setItem('refresh_token', data.refresh_token);
+                    if (isMobileDevice() && data.refresh_token) {
+                        sessionStorage.setItem('refresh_token', data.refresh_token);
+                    }
                     navigate('/todo', { replace: true });
                 } else {
                     toast.error('Google 로그인 실패');
