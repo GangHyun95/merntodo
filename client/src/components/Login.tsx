@@ -34,12 +34,13 @@ export default function Login() {
                     }
                 );
 
-                const data: { access_token?: string } = await res.json();
+                const data: { access_token?: string, refresh_token?: string } = await res.json();
                 console.log(data);
 
-                if (data.access_token) {
+                if (data.access_token && data.refresh_token) {
                     toast.success('Google 로그인 성공!');
                     setAccessToken(data.access_token);
+                    sessionStorage.setItem('refresh_token', data.refresh_token);
                     navigate('/todo', { replace: true });
                 } else {
                     toast.error('Google 로그인 실패');

@@ -6,6 +6,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { API_BASE_URL } from '@/config';
 import useAuthStore from '@/store/authStore';
+import { isMobileDevice } from '@/utils/isMobileDevice';
 import { CircleUserRound } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
@@ -15,13 +16,10 @@ export default function Profile() {
     const logout = useAuthStore((state) => state.logout);
     const handleLogout = async () => {
         try {
-            const response = await fetch(
-                `${API_BASE_URL}/api/user/logout`,
-                {
-                    method: 'POST',
-                    credentials: 'include',
-                }
-            );
+            const response = await fetch(`${API_BASE_URL}/api/user/logout`, {
+                method: 'POST',
+                credentials: 'include',
+            });
 
             if (!response.ok) {
                 throw new Error('Logout failed');
@@ -29,6 +27,9 @@ export default function Profile() {
 
             const data = await response.json();
             toast.success(data.message);
+            if (isMobileDevice()) {
+                sessionStorage.removeItem('refresh_token');
+            }
             logout();
             setTimeout(() => {
                 navigate('/', { replace: true });

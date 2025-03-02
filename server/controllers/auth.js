@@ -4,6 +4,11 @@ import User from '../models/userModel.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
+function isMobile(req) {
+    const userAgent = req.headers?.['user-agent'] || "";
+    return /Mobi|Android|iPhone|iPad|iPod/i.test(userAgent);
+}
+
 export async function register(req, res, next) {
     try {
         const { email, password, passwordCheck } = req.body;
@@ -66,17 +71,20 @@ export async function login(req, res, next) {
         const accessToken = generateAccessToken(user._id);
         const refreshToken = generateRefreshToken(user._id);
 
-        res.cookie('refresh_token', refreshToken, {
-            httpOnly: true,
-            secure: true,
-            sameSite: 'None',
-            maxAge: 24 * 60 * 60 * 1000,
-        });
+        if (!isMobile(req)) {
+            res.cookie('refresh_token', refreshToken, {
+                httpOnly: true,
+                secure: true,
+                sameSite: 'None',
+                maxAge: 24 * 60 * 60 * 1000,
+            });
+        }
 
-        res.json({
+        return res.json({
             _id: user.id,
             email: user.email,
             access_token: accessToken,
+            ...(isMobile(req) && { refresh_token: refreshToken }),
         });
     } catch (error) {
         next(error);
@@ -85,7 +93,16 @@ export async function login(req, res, next) {
 
 export async function refreshAccessToken(req, res, next) {
     try {
-        const refreshToken = req.cookies.refresh_token;
+        await connectToDB();
+
+        let refreshToken;
+
+        const authHeader = req.headers.authorization || "";
+        if (authHeader.startsWith('Bearer')) {
+            refreshToken = authHeader.split(' ')[1];
+        } else {
+            refreshToken = req.cookies.refresh_token;
+        }
 
         if (!refreshToken) {
             return next(
@@ -175,8 +192,6 @@ export async function googleLogin(req, res, next) {
 
         const userInfo = await userInfoResponse.json();
 
-        console.log(userInfo);
-
         const { id: googleId, email, name, picture } = userInfo;
 
         await connectToDB();
@@ -196,19 +211,22 @@ export async function googleLogin(req, res, next) {
         const accessToken = generateAccessToken(user._id);
         const refreshToken = generateRefreshToken(user._id);
 
-        res.cookie('refresh_token', refreshToken, {
-            httpOnly: true,
-            secure: true,
-            sameSite: 'None',
-            maxAge: 24 * 60 * 60 * 1000,
-        });
+        if (!isMobile(req)) {
+            res.cookie('refresh_token', refreshToken, {
+                httpOnly: true,
+                secure: true,
+                sameSite: 'None',
+                maxAge: 24 * 60 * 60 * 1000,
+            });
+        }
 
-        res.json({
+        return res.json({
             _id: user.id,
             email: user.email,
             name: user.name,
             avatar: user.avatar,
             access_token: accessToken,
+            ...(isMobile(req) && { refresh_token: refreshToken }),
         });
     } catch (error) {
         console.error('Google 로그인 에러:', error);
@@ -217,13 +235,19 @@ export async function googleLogin(req, res, next) {
 }
 
 export async function logout(req, res, next) {
-    res.clearCookie('refresh_token', {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'None',
-    })
-        .status(200)
-        .json({ message: '로그아웃 완료' });
+    try {
+        if (!isMobile(req)) {
+            res.clearCookie('refresh_token', {
+                httpOnly: true,
+                secure: true,
+                sameSite: 'None',
+            });
+        }
+
+        return res.status(200).json({ message: '로그아웃 완료' });
+    } catch (error) {
+        next(error);
+    }
 }
 
 const generateAccessToken = (id) => {

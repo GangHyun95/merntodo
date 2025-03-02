@@ -1,5 +1,6 @@
 import { API_BASE_URL } from '@/config';
 import useAuthStore from '@/store/authStore';
+import { isMobileDevice } from '@/utils/isMobileDevice';
 
 type RegisterState = {
     success: string | null;
@@ -52,6 +53,9 @@ export async function login(
 
         if (data.access_token) {
             useAuthStore.getState().setAccessToken(data.access_token);
+            if (isMobileDevice()) {
+                sessionStorage.setItem('refresh_token', data.refresh_token);
+            }
         }
         return { error: null, success: data };
     } catch (error) {
