@@ -1,3 +1,11 @@
+## 테스트 계정
+
+직접 회원가입이 번거로우시면, 아래 테스트 계정을 사용해 로그인하실 수 있습니다.  
+
+📌 **테스트 계정 정보**  
+- **이메일**: `test@test.com`  
+- **비밀번호**: `test`  
+
 ## 시연 페이지
 
 [Live Demo](https://merntodo-client.onrender.com/)
