@@ -24,6 +24,7 @@ export default function Register({ setIsRegister }: Props) {
         password: false,
         passwordCheck: false,
     });
+    const [capsLockOn, setCapsLockOn] = useState(false);
 
     const toggleShowPassword = (field: 'password' | 'passwordCheck') => {
         setShowPassword((prev) => ({ ...prev, [field]: !prev[field] }));
@@ -49,6 +50,20 @@ export default function Register({ setIsRegister }: Props) {
         }
     }, [state.success, state.error]);
 
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.getModifierState('CapsLock')) {
+            setCapsLockOn(true);
+        } else {
+            setCapsLockOn(false);
+        }
+    };
+
+    const handleKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (!event.getModifierState('CapsLock')) {
+            setCapsLockOn(false);
+        }
+    };
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
@@ -73,10 +88,13 @@ export default function Register({ setIsRegister }: Props) {
                 <div className='input-box'>
                     <Input
                         type={showPassword.password ? 'text' : 'password'}
+                        inputMode='text'
                         name='password'
                         placeholder='Password'
                         value={formData.password}
                         onChange={handleChange}
+                        onKeyDown={handleKeyDown}
+                        onKeyUp={handleKeyUp}
                         required
                     />
                     <button
@@ -90,10 +108,13 @@ export default function Register({ setIsRegister }: Props) {
                 <div className='input-box'>
                     <Input
                         type={showPassword.passwordCheck ? 'text' : 'password'}
+                        inputMode='text'
                         name='passwordCheck'
                         placeholder='Password Check'
                         value={formData.passwordCheck}
                         onChange={handleChange}
+                        onKeyDown={handleKeyDown}
+                        onKeyUp={handleKeyUp}
                         required
                     />
                     <button
@@ -104,6 +125,16 @@ export default function Register({ setIsRegister }: Props) {
                         {showPassword.passwordCheck ? <Eye /> : <EyeOff />}
                     </button>
                 </div>
+                {capsLockOn && (
+                    <p
+                        style={{
+                            color: 'red',
+                            fontSize: '12px',
+                        }}
+                    >
+                        ⚠ CAPS LOCK이 켜져 있습니다!
+                    </p>
+                )}
 
                 <Button disabled={isPending} className='btn'>
                     {isPending ? 'Registering' : 'Register'}

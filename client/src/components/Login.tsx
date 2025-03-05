@@ -19,23 +19,21 @@ export default function Login() {
         error: null,
     });
     const [showPassword, setShowPassword] = useState(false);
+    const [capsLockOn, setCapsLockOn] = useState(false);
     const setAccessToken = useAuthStore((state) => state.setAccessToken);
 
     const googleLogin = useGoogleLogin({
         flow: 'auth-code',
         onSuccess: async (response) => {
             try {
-                const res = await fetch(
-                    `${API_BASE_URL}/api/user/google`,
-                    {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ code: response.code }),
-                        credentials: 'include',
-                    }
-                );
+                const res = await fetch(`${API_BASE_URL}/api/user/google`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ code: response.code }),
+                    credentials: 'include',
+                });
 
-                const data: { access_token?: string, refresh_token?: string } = await res.json();
+                const data: { access_token?: string; refresh_token?: string } = await res.json();
                 if (data.access_token) {
                     toast.success('Google 로그인 성공!');
                     setAccessToken(data.access_token);
@@ -79,6 +77,20 @@ export default function Login() {
         }
     }, [state.success, state.error]);
 
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.getModifierState('CapsLock')) {
+            setCapsLockOn(true);
+        } else {
+            setCapsLockOn(false);
+        }
+    };
+
+    const handleKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (!event.getModifierState('CapsLock')) {
+            setCapsLockOn(false);
+        }
+    };
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
@@ -103,10 +115,13 @@ export default function Login() {
                 <div className='input-box'>
                     <Input
                         type={showPassword ? 'text' : 'password'}
+                        inputMode='text'
                         name='password'
                         placeholder='Password'
                         value={formData.password}
                         onChange={handleChange}
+                        onKeyDown={handleKeyDown}
+                        onKeyUp={handleKeyUp}
                         required
                     />
                     <button
@@ -117,6 +132,16 @@ export default function Login() {
                         {showPassword ? <Eye /> : <EyeOff />}
                     </button>
                 </div>
+                {capsLockOn && (
+                    <p
+                        style={{
+                            color: 'red',
+                            fontSize: '12px',
+                        }}
+                    >
+                        ⚠ CAPS LOCK이 켜져 있습니다!
+                    </p>
+                )}
 
                 <Button disabled={isPending} className='btn'>
                     {isPending ? 'Logging in' : 'Login'}
