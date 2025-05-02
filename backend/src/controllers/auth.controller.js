@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 import User from '../models/user.model.js';
 import { generateAccessToken, generateRefreshToken } from '../lib/utils.js';
+import jwt from 'jsonwebtoken';
 
 export const register = async (req, res) => {
     const { email, password, passwordCheck } = req.body;
@@ -115,4 +116,43 @@ export const logout = async (req, res) => {
 
 export const googleLogin = async (req, res) => {};
 
-export const refreshAccessToken = async (req, res) => {};
+export const refreshAccessToken = async (req, res) => {
+    const refreshToken = req.cookies['refresh-token'];
+    try {
+        if (!refreshToken) {
+            return res.status(401).json({
+                message: 'Refresh Token이 없습니다. 다시 로그인해주세요.',
+            });
+        }
+
+        jwt.verify(
+            refreshToken,
+            process.env.REFRESH_TOKEN_SECRET,
+            async (err, decoded) => {
+                if (err) {
+                    return res.status(403).json({
+                        message: 'Refresh Token이 유효하지 않습니다.',
+                    });
+                }
+
+                const user = await User.findById(decoded.id);
+                if (!user) {
+                    return res.status(404).json({
+                        message: '사용자를 찾을 수 없습니다.',
+                    });
+                }
+
+                const newAccessToken = generateAccessToken(user._id);
+
+                res.json({
+                    accessToken: newAccessToken,
+                });
+            }
+        );
+    } catch (error) {
+        console.error('Access Token 갱신 오류:', error);
+        res.status(500).json({
+            message: '서버 오류가 발생했습니다.',
+        });
+    }
+};

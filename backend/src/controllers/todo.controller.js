@@ -1,4 +1,6 @@
-export const getAllTodos = async (req, res) => {};
+export const getAllTodos = async (req, res) => {
+    res.send('getAllTodos');
+};
 
 export const addTodo = async (req, res) => {};
 

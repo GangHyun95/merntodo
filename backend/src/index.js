@@ -7,6 +7,7 @@ import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 
 import { connectToDB } from './lib/db.js';
+import { protectRoute } from './middleware/auth.middleware.js';
 
 dotenv.config();
 const app = express();
@@ -16,7 +17,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use('/api/auth', authRoutes);
-app.use('/api/todos', todoRoutes);
+app.use('/api/todo', protectRoute, todoRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
