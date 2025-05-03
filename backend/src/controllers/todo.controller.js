@@ -38,6 +38,7 @@ export const addTodo = async (req, res) => {
         await newTodo.save();
         res.status(201).json({
             message: '할 일이 추가되었습니다.',
+            newTodo,
         });
     } catch (error) {
         console.error('할 일 추가 오류:', error);

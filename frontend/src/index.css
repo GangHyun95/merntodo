@@ -142,7 +142,7 @@ input[type='checkbox']:checked ~ .custom-checkbox svg {
     fill: #fff;
 }
 
-input[type='checkbox']:checked ~ .todo-text {
+input[type='checkbox']:checked ~ label {
     text-decoration: line-through;
     color: #6b7280;
 }
