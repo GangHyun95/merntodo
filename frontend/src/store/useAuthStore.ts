@@ -1,5 +1,5 @@
 import { axiosInstance } from '@/lib/axios';
-import axios, { AxiosError } from 'axios';
+import { AxiosError } from 'axios';
 import toast from 'react-hot-toast';
 import { create } from 'zustand';
 

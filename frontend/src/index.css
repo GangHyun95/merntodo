@@ -120,17 +120,29 @@
     }
 }
 
-.box-anim {
-    border-radius: 10px;
-
-    animation: glow 3s infinite alternate;
+.custom-checkbox {
+    border: 2px solid #6b7280;
+    border-radius: 50%;
+    min-height: 20px;
+    min-width: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: 200ms ease;
 }
 
-@keyframes glow {
-    0% {
-        box-shadow: 0 0 5px 0 #fffbeb;
-    }
-    100% {
-        box-shadow: 0 0 20px 10px #fffbeb;
-    }
+input[type='checkbox']:checked ~ .custom-checkbox {
+    background-color: var(--primary);
+    border-color: transparent;
+}
+
+input[type='checkbox']:checked ~ .custom-checkbox svg {
+    fill: #fff;
+}
+
+input[type='checkbox']:checked ~ .todo-text {
+    text-decoration: line-through;
+    color: #6b7280;
 }
