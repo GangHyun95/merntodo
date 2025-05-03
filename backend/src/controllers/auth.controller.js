@@ -114,7 +114,106 @@ export const logout = async (req, res) => {
     });
 };
 
-export const googleLogin = async (req, res) => {};
+export const googleLogin = async (req, res) => {
+    const { code } = req.body;
+
+    try {
+        if (!code) {
+            return res.status(400).json({
+                message: 'Google 로그인 코드가 필요합니다.',
+            });
+        }
+
+        const tokenResponse = await fetch(
+            'https://oauth2.googleapis.com/token',
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    client_id: process.env.GOOGLE_CLIENT_ID,
+                    client_secret: process.env.GOOGLE_CLIENT_SECRET,
+                    code,
+                    grant_type: 'authorization_code',
+                    redirect_uri: process.env.GOOGLE_REDIRECT_URI,
+                }).toString(),
+            }
+        );
+
+        const tokenData = await tokenResponse.json();
+
+        const { access_token } = tokenData;
+
+        if (!access_token) {
+            return res.status(400).json({
+                message: 'Google Access Token을 가져오지 못했습니다.',
+            });
+        }
+
+        const userInfoResponse = await fetch(
+            'https://www.googleapis.com/oauth2/v3/userinfo',
+            {
+                headers: {
+                    Authorization: `Bearer ${access_token}`,
+                },
+            }
+        );
+        const userInfo = await userInfoResponse.json();
+
+        const { id: googleId, email, name, picture } = userInfo;
+
+        let user = await User.findOne({ email });
+
+        if (!user) {
+            user = new User({
+                email,
+                googleId,
+                name,
+                avatar: picture,
+            });
+            await user.save();
+        }
+
+        const accessToken = generateAccessToken(user._id);
+        const refreshToken = generateRefreshToken(user._id);
+
+        res.cookie('refresh-token', refreshToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+        });
+
+        res.json({
+            accessToken,
+            user: {
+                id: user._id,
+                email: user.email,
+                name: user.name,
+                avatar: user.avatar,
+            },
+        });
+    } catch (error) {
+        console.error('Google 로그인 오류:', error);
+        res.status(500).json({
+            message: '서버 오류가 발생했습니다.',
+        });
+    }
+};
+
+export const getGoogleClientId = async (req, res) => {
+    try {
+        res.json({
+            googleClientId: process.env.GOOGLE_CLIENT_ID,
+        });
+    } catch (error) {
+        console.error('Google Client ID 가져오기 오류:', error);
+        res.status(500).json({
+            message: '서버 오류가 발생했습니다.',
+        });
+    }
+};
 
 export const refreshAccessToken = async (req, res) => {
     const refreshToken = req.cookies['refresh-token'];

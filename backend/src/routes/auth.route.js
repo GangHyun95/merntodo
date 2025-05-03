@@ -1,5 +1,6 @@
 import express from 'express';
 import {
+    getGoogleClientId,
     googleLogin,
     login,
     logout,
@@ -18,5 +19,7 @@ router.post('/logout', logout);
 router.post('/google-login', googleLogin);
 
 router.get('/refresh-token', refreshAccessToken);
+
+router.get('/google-client-id', getGoogleClientId);
 
 export default router;

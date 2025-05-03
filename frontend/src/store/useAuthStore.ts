@@ -1,5 +1,5 @@
 import { axiosInstance } from '@/lib/axios';
-import { AxiosError } from 'axios';
+import axios, { AxiosError } from 'axios';
 import toast from 'react-hot-toast';
 import { create } from 'zustand';
 
@@ -9,10 +9,13 @@ type AuthState = {
     isSigningUp: boolean;
     isLoggingIn: boolean;
     isCheckingAuth: boolean;
+    googleClientId: string;
     checkAuth: () => Promise<void>;
     signup: (data: UserType) => Promise<boolean>;
     login: (data: UserType) => Promise<void>;
     logout: () => Promise<void>;
+    googleLogin: (code: string) => Promise<void>;
+    getGoogleClientId: () => Promise<void>;
 };
 
 type UserType = {
@@ -26,6 +29,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     refreshToken: null,
     isSigningUp: false,
     isLoggingIn: false,
+    googleClientId: '',
     isCheckingAuth: true,
     checkAuth: async () => {
         try {
@@ -72,6 +76,37 @@ export const useAuthStore = create<AuthState>((set) => ({
             toast.error(errorMessage);
         } finally {
             set({ isLoggingIn: false });
+        }
+    },
+    googleLogin: async (code: string) => {
+        set({ isLoggingIn: true });
+        try {
+            const res = await axiosInstance.post('/auth/google-login', {
+                code,
+            });
+            const { accessToken, refreshToken } = res.data;
+            if (accessToken) {
+                set({ accessToken, refreshToken });
+                toast.success('구글 로그인 성공');
+            } else {
+                toast.error('구글 로그인 실패');
+            }
+        } catch (error) {
+            console.error('Google 로그인 에러:', error);
+            toast.error('Google 로그인 중 문제가 발생했습니다.');
+        } finally {
+            set({ isLoggingIn: false });
+        }
+    },
+
+    getGoogleClientId: async () => {
+        try {
+            const res = await axiosInstance.get('/auth/google-client-id');
+            console.log(res.data);
+            set({ googleClientId: res.data.googleClientId });
+        } catch (error) {
+            console.log('Error: ', error);
+            set({ googleClientId: '' });
         }
     },
 
