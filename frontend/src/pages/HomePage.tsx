@@ -31,20 +31,12 @@ export default function HomePage() {
                         TODO APP
                     </h2>
                 </div>
-                <div className='flex items-center gap-4'>
-                    <Link
-                        to='profile'
-                        className='border rounded-full p-1 hover:border-primary cursor-pointer group transition-colors duration-300'
-                    >
-                        <User className='size-6 group-hover:text-primary transition-colors duration-300' />
-                    </Link>
-                    <Button
-                        className='bg-primary/90 rounded-full hover:bg-primary cursor-pointer'
-                        onClick={logout}
-                    >
-                        Logout
-                    </Button>
-                </div>
+                <Button
+                    className='bg-primary/90 rounded-full hover:bg-primary cursor-pointer'
+                    onClick={logout}
+                >
+                    Logout
+                </Button>
             </header>
             {/* body */}
             <TodoForm />
