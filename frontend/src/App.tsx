@@ -3,23 +3,40 @@ import HomePage from './pages/HomePage';
 import SignupPage from './pages/SignupPage';
 import LoginPage from './pages/LoginPage';
 import { Toaster } from 'react-hot-toast';
+import { useEffect } from 'react';
+import { useAuthStore } from './store/useAuthStore';
+import { Loader } from 'lucide-react';
 
 function App() {
-    const authUser = false;
+    const { checkAuth, isCheckingAuth, accessToken } = useAuthStore();
+    useEffect(() => {
+        checkAuth();
+    }, [checkAuth]);
+
+    if (isCheckingAuth && !accessToken)
+        return (
+            <div className='flex items-center justify-center h-screen'>
+                <Loader className='size-10 animate-spin' />
+            </div>
+        );
     return (
         <>
             <Routes>
                 <Route
                     path='/'
-                    element={authUser ? <HomePage /> : <Navigate to='/login' />}
+                    element={
+                        accessToken ? <HomePage /> : <Navigate to='/login' />
+                    }
                 ></Route>
                 <Route
                     path='/signup'
-                    element={!authUser ? <SignupPage /> : <Navigate to='/' />}
+                    element={
+                        !accessToken ? <SignupPage /> : <Navigate to='/' />
+                    }
                 ></Route>
                 <Route
                     path='/login'
-                    element={!authUser ? <LoginPage /> : <Navigate to='/' />}
+                    element={!accessToken ? <LoginPage /> : <Navigate to='/' />}
                 ></Route>
             </Routes>
             <Toaster />

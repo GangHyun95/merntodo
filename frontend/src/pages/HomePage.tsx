@@ -1,3 +1,6 @@
+import { useAuthStore } from '@/store/useAuthStore';
+
 export default function HomePage() {
-    return <div>HomePage</div>;
+    const { logout } = useAuthStore();
+    return <div onClick={logout}>로그아웃</div>;
 }

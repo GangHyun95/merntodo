@@ -1,6 +1,8 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useAuthStore } from '@/store/useAuthStore';
+import { Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -10,8 +12,11 @@ export default function LoginPage() {
         password: '',
     });
 
+    const { login, isLoggingIn } = useAuthStore();
+
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        login(formData);
     };
     return (
         <div className='h-screen p-10 bg-muted'>
@@ -31,7 +36,10 @@ export default function LoginPage() {
                         </p>
                     </div>
 
-                    <form onSubmit={handleSubmit} className='w-full max-w-sm mt-4'>
+                    <form
+                        onSubmit={handleSubmit}
+                        className='w-full max-w-sm mt-4'
+                    >
                         <Label htmlFor='email'>이메일</Label>
                         <Input
                             className='mt-2 mb-4 bg-transparent rounded-full'
@@ -64,8 +72,16 @@ export default function LoginPage() {
                         <Button
                             type='submit'
                             className='w-full mt-6 bg-primary/90 rounded-full hover:bg-primary cursor-pointer'
+                            disabled={isLoggingIn}
                         >
-                            로그인
+                            {isLoggingIn ? (
+                                <>
+                                    <Loader2 className='size-5 animate-spin' />
+                                    Loading...
+                                </>
+                            ) : (
+                                '로그인'
+                            )}
                         </Button>
 
                         <div className='flex items-center gap-4 my-6'>

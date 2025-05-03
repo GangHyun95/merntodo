@@ -1,19 +1,42 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useAuthStore } from '@/store/useAuthStore';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { Loader2 } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 export default function LoginPage() {
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         email: '',
         password: '',
-        passwordConfirm: '',
+        passwordCheck: '',
     });
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
+    const { isSigningUp, signup } = useAuthStore();
+
+    const validateForm = () => {
+        if (!formData.email.trim()) return toast.error('이메일을 입력해주세요');
+        if (!formData.password.trim())
+            return toast.error('비밀번호를 입력해주세요');
+
+        if (formData.password.length < 6)
+            return toast.error('비밀번호는 최소 6자 이상이어야 합니다');
+
+        return true;
     };
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const isValid = validateForm();
+        if (isValid === true) {
+            const isSuccess = await signup(formData);
+            if (isSuccess) navigate('/login');
+        }
+    };
+
     return (
         <div className='h-screen p-10 bg-muted'>
             <div className='grid w-full h-full grid-cols-1 md:grid-cols-2 bg-background'>
@@ -65,17 +88,17 @@ export default function LoginPage() {
                             }
                         />
 
-                        <Label htmlFor='passwordConfirm'>비밀번호 확인</Label>
+                        <Label htmlFor='passwordCheck'>비밀번호 확인</Label>
                         <Input
                             className='mt-2 bg-transparent rounded-full'
                             type='password'
-                            id='passwordConfirm'
+                            id='passwordCheck'
                             placeholder='비밀번호를 입력하세요.'
-                            value={formData.password}
+                            value={formData.passwordCheck}
                             onChange={(e) =>
                                 setFormData({
                                     ...formData,
-                                    passwordConfirm: e.target.value,
+                                    passwordCheck: e.target.value,
                                 })
                             }
                         />
@@ -83,8 +106,16 @@ export default function LoginPage() {
                         <Button
                             type='submit'
                             className='w-full mt-6 bg-primary/90 rounded-full hover:bg-primary cursor-pointer'
+                            disabled={isSigningUp}
                         >
-                            회원가입
+                            {isSigningUp ? (
+                                <>
+                                    <Loader2 className='size-5 animate-spin' />
+                                    Loading...
+                                </>
+                            ) : (
+                                '회원가입'
+                            )}
                         </Button>
 
                         <div className='flex items-center gap-4 my-6'>
