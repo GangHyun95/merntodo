@@ -224,30 +224,27 @@ export const refreshAccessToken = async (req, res) => {
             });
         }
 
-        jwt.verify(
+        const decoded = jwt.verify(
             refreshToken,
-            process.env.REFRESH_TOKEN_SECRET,
-            async (err, decoded) => {
-                if (err) {
-                    return res.status(403).json({
-                        message: 'Refresh Token이 유효하지 않습니다.',
-                    });
-                }
-
-                const user = await User.findById(decoded.id);
-                if (!user) {
-                    return res.status(404).json({
-                        message: '사용자를 찾을 수 없습니다.',
-                    });
-                }
-
-                const newAccessToken = generateAccessToken(user._id);
-
-                res.json({
-                    accessToken: newAccessToken,
-                });
-            }
+            process.env.REFRESH_TOKEN_SECRET
         );
+        if (!decoded) {
+            return res.status(403).json({
+                message: 'Refresh Token이 유효하지 않습니다.',
+            });
+        }
+
+        const user = await User.findById(decoded.id);
+        if (!user) {
+            return res.status(404).json({
+                message: '사용자를 찾을 수 없습니다.',
+            });
+        }
+
+        const newAccessToken = generateAccessToken(user._id);
+        res.json({
+            accessToken: newAccessToken,
+        });
     } catch (error) {
         console.error('Access Token 갱신 오류:', error);
         res.status(500).json({
