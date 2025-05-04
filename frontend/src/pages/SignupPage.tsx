@@ -57,7 +57,7 @@ export default function LoginPage() {
 
                     <form
                         onSubmit={handleSubmit}
-                        className='w-full max-w-sm mt-4'
+                        className='w-full max-w-sm mt-4 px-4 sm:p-0'
                     >
                         <Label htmlFor='email'>이메일</Label>
                         <Input

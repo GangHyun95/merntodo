@@ -102,7 +102,6 @@ export const useAuthStore = create<AuthState>((set) => ({
     getGoogleClientId: async () => {
         try {
             const res = await axiosInstance.get('/auth/google-client-id');
-            console.log(res.data);
             set({ googleClientId: res.data.googleClientId });
         } catch (error) {
             console.log('Error: ', error);
