@@ -3,9 +3,8 @@ import TodoItem from '@/components/TodoItem';
 import { Button } from '@/components/ui/button';
 import { useAuthStore } from '@/store/useAuthStore';
 import { useTodoStore } from '@/store/useTodoStore';
-import { ListTodo, Loader, User } from 'lucide-react';
+import { ListTodo, Loader } from 'lucide-react';
 import { useEffect } from 'react';
-import { Link } from 'react-router-dom';
 
 export default function HomePage() {
     const { logout } = useAuthStore();
