@@ -5,10 +5,17 @@ import LoginPage from './pages/LoginPage';
 import { Toaster } from 'react-hot-toast';
 import { useEffect } from 'react';
 import { useAuthStore } from './store/useAuthStore';
+import { useShallow } from 'zustand/shallow';
 import { Loader } from 'lucide-react';
 
 function App() {
-    const { checkAuth, isCheckingAuth, accessToken } = useAuthStore();
+    const { checkAuth, isCheckingAuth, accessToken } = useAuthStore(
+        useShallow((state) => ({
+            checkAuth: state.checkAuth,
+            isCheckingAuth: state.isCheckingAuth,
+            accessToken: state.accessToken,
+        }))
+    );
     useEffect(() => {
         checkAuth();
     }, [checkAuth]);

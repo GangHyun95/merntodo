@@ -5,7 +5,8 @@ import { Button } from './ui/button';
 import { Loader2 } from 'lucide-react';
 
 export default function GoogleLoginButton() {
-    const { googleLogin, isLoggingIn } = useAuthStore();
+    const googleLogin = useAuthStore((state) => state.googleLogin);
+    const isLoggingIn = useAuthStore((state) => state.isLoggingIn);
 
     const googleLoginHandler = useGoogleLogin({
         flow: 'auth-code',

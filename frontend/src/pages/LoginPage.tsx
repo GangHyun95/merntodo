@@ -7,6 +7,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import { Loader, Loader2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useShallow } from 'zustand/shallow';
 
 export default function LoginPage() {
     const [formData, setFormData] = useState({
@@ -15,7 +16,14 @@ export default function LoginPage() {
     });
 
     const { login, isLoggingIn, googleClientId, getGoogleClientId } =
-        useAuthStore();
+        useAuthStore(
+            useShallow((state) => ({
+                login: state.login,
+                isLoggingIn: state.isLoggingIn,
+                googleClientId: state.googleClientId,
+                getGoogleClientId: state.getGoogleClientId,
+            }))
+        );
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();

@@ -5,10 +5,17 @@ import { useAuthStore } from '@/store/useAuthStore';
 import { useTodoStore } from '@/store/useTodoStore';
 import { ListTodo, Loader } from 'lucide-react';
 import { useEffect } from 'react';
+import { useShallow } from 'zustand/shallow';
 
 export default function HomePage() {
-    const { logout } = useAuthStore();
-    const { todos, getTodos, gettingTodos } = useTodoStore();
+    const logout = useAuthStore((state) => state.logout);
+    const { todos, getTodos, gettingTodos } = useTodoStore(
+        useShallow((state) => ({
+            todos: state.todos,
+            getTodos: state.getTodos,
+            gettingTodos: state.gettingTodos,
+        }))
+    );
     useEffect(() => {
         getTodos();
     }, [getTodos]);

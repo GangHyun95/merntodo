@@ -5,7 +5,8 @@ import { Todo, useTodoStore } from '@/store/useTodoStore';
 import EditTodo from './EditTodo';
 
 export default function TodoItem({ _id, title, isCompleted }: Todo) {
-    const { updateTodo, deleteTodo } = useTodoStore();
+    const updateTodo = useTodoStore((state) => state.updateTodo);
+    const deleteTodo = useTodoStore((state) => state.deleteTodo);
     return (
         <li className='flex items-center justify-between px-4 bg-slate-100 rounded-xl mb-2.5'>
             <Input

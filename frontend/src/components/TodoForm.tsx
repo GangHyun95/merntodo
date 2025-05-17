@@ -9,8 +9,7 @@ export default function TodoForm() {
         isCompleted: false,
     });
 
-    const { addTodo } = useTodoStore();
-
+    const addTodo = useTodoStore((state) => state.addTodo);
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         addTodo(formData);

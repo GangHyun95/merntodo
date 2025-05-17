@@ -17,13 +17,13 @@ import { useTodoStore } from '@/store/useTodoStore';
 export default function EditTodo({
     id,
     title,
-    isCompleted
+    isCompleted,
 }: {
     id: string;
     title: string;
     isCompleted: boolean;
 }) {
-    const { updateTodo } = useTodoStore();
+    const updateTodo = useTodoStore((state) => state.updateTodo);
     const [updatedTitle, setUpdatedTitle] = useState(title);
     const [isOpen, setIsOpen] = useState(false);
 

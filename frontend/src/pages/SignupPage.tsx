@@ -15,7 +15,8 @@ export default function LoginPage() {
         passwordCheck: '',
     });
 
-    const { isSigningUp, signup } = useAuthStore();
+    const isSigningUp = useAuthStore((state) => state.isSigningUp);
+    const signup = useAuthStore((state) => state.signup);
 
     const validateForm = () => {
         if (!formData.email.trim()) return toast.error('이메일을 입력해주세요');
