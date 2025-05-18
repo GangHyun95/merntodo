@@ -39,7 +39,7 @@ export default function LoginPage() {
     };
 
     return (
-        <div className='h-screen p-10 bg-muted'>
+        <div className='h-screen p-0 md:p-10 bg-muted'>
             <div className='grid w-full h-full grid-cols-1 md:grid-cols-2 bg-background'>
                 <div className='flex items-center justify-center flex-col w-full'>
                     <div className='my-4'>
