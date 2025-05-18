@@ -16,10 +16,10 @@ router.post('/login', login);
 
 router.post('/logout', logout);
 
-router.post('/google-login', googleLogin);
+router.post('/google', googleLogin);
 
-router.get('/refresh-token', refreshAccessToken);
+router.post('/refresh', refreshAccessToken);
 
-router.get('/google-client-id', getGoogleClientId);
+router.get('/google', getGoogleClientId);
 
 export default router;

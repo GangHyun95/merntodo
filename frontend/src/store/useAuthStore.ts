@@ -33,7 +33,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     isCheckingAuth: true,
     checkAuth: async () => {
         try {
-            const res = await axiosInstance.get('/auth/refresh-token');
+            const res = await axiosInstance.post('/auth/refresh');
             set({ accessToken: res.data.accessToken });
         } catch (error) {
             console.log('Error in checkAuth: ', error);
@@ -81,7 +81,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     googleLogin: async (code: string) => {
         set({ isLoggingIn: true });
         try {
-            const res = await axiosInstance.post('/auth/google-login', {
+            const res = await axiosInstance.post('/auth/google', {
                 code,
             });
             const { accessToken, refreshToken } = res.data;
@@ -92,8 +92,10 @@ export const useAuthStore = create<AuthState>((set) => ({
                 toast.error('구글 로그인 실패');
             }
         } catch (error) {
-            console.error('Google 로그인 에러:', error);
-            toast.error('Google 로그인 중 문제가 발생했습니다.');
+            const err = error as AxiosError<{ message: string }>;
+            const errorMessage =
+                err.response?.data?.message || 'Unknown error occurred';
+            toast.error(errorMessage);
         } finally {
             set({ isLoggingIn: false });
         }
@@ -101,7 +103,7 @@ export const useAuthStore = create<AuthState>((set) => ({
 
     getGoogleClientId: async () => {
         try {
-            const res = await axiosInstance.get('/auth/google-client-id');
+            const res = await axiosInstance.get('/auth/google');
             set({ googleClientId: res.data.googleClientId });
         } catch (error) {
             console.log('Error: ', error);
